@@ -21,6 +21,7 @@ CHECKOUTS_FIELDNAMES = [
 	'isbn',
 	'checkout_date',
 	'due_date',
+	'renewal_date',
 	'returned_date',
 ]
 
@@ -83,9 +84,22 @@ class CatalogData:
 			isbn=book.isbn,
 			checkout_date=today,
 			due_date=due_date,
+			renewal_date=None,
 			returned_date=None,
 		)
 		self.checkouts.write_one(checkout)
+
+	def renew_book(self, checkout: Checkout):
+		"""
+		Extends the allowable checkout period of a user's book.
+		"""
+		if checkout.returned_date is not None:
+			raise Exception('Checkout has already been returned')
+		elif checkout.renewal_date is not None:
+			raise Exception('Checkout has already been renewed once')
+
+		checkout.renewal_date = datetime.date.today()
+		self.checkouts.update_one(checkout)
 
 	def return_book(self, checkout: Checkout):
 		if checkout.returned_date is not None:
