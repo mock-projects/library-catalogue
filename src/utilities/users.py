@@ -24,6 +24,7 @@ def manage_user(catalog: CatalogData):
 			('details', 'User details'),
 			('history', 'Checkout history'),
 			('checkout', 'Check out a book'),
+			('renew', 'Renew a book'),
 			('return', 'Return a book'),
 			('fines', 'Pay fines'),
 			('exit', 'Exit user management'),
@@ -35,6 +36,8 @@ def manage_user(catalog: CatalogData):
 			print_checkout_history(user, catalog)
 		elif choice == 'checkout':
 			checkout_book(user, catalog)
+		elif choice == 'renew':
+			renew_book(user, catalog)
 		elif choice == 'return':
 			return_book(user, catalog)
 		elif choice == 'fines':
@@ -111,6 +114,49 @@ def checkout_book(user: User, catalog: CatalogData):
 		return
 
 	print('Checkout complete.')
+
+def renew_book(user: User, catalog: CatalogData):
+	checkouts = catalog.get_checkouts_for_user(user)
+
+	# Determine if any books are borrowed by the user.
+	if not checkouts:
+		print('No books currently borrowed.')
+		return
+
+	current_checkouts = [
+		checkout for checkout in checkouts if checkout.returned_date is None
+	]
+
+	if not current_checkouts:
+		print('No books currently borrowed.')
+		return
+
+	# Determine whether any of the user's books are eligible for renewal.
+	renewable_checkouts = [
+		checkout for checkout in current_checkouts if checkout.renewal_date is None
+	]
+
+	if not renewable_checkouts:
+		print('No books cuurently eligible for renewal.')
+		return
+
+	# List the eligible books and prompt the user for a choice.
+	checkout = prompt_for_choice(
+		'Choose a book to renew:',
+		[
+			(checkout, str(catalog.get_book_by_isbn(checkout.isbn)))
+			for checkout in renewable_checkouts
+		],
+	)
+
+	book = catalog.get_book_by_isbn(checkout.isbn)
+	print(f'Book selected: {book}')
+	if not prompt_for_confirmation('Confirm renewal?'):
+		return
+
+	# Run the renewal function.
+	catalog.renew_book(checkout)
+	print('Book renewed successfully.')
 
 def return_book(user: User, catalog: CatalogData):
 	checkouts = catalog.get_checkouts_for_user(user)
