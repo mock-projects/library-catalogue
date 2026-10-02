@@ -81,6 +81,10 @@ def print_book_analytics(catalog):
 		checkout_duration_count = 0
 
 		for checkout in checkouts:
+			# Skip books that have not yet been returned
+			if not checkout.returned_date:
+				continue
+
 			duration = (
 				checkout.returned_date - checkout.checkout_date
 			).total_seconds() / (60 * 60 * 24)
