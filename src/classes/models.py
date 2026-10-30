@@ -91,6 +91,7 @@ class Checkout:
 	isbn: str
 	checkout_date: date
 	due_date: date
+	renewal_date: Optional[date]
 	returned_date: Optional[date]
 
 	def __init__(
@@ -100,6 +101,7 @@ class Checkout:
 		isbn: str,
 		checkout_date: date,
 		due_date: date,
+		renewal_date: Optional[date],
 		returned_date: Optional[date],
 	):
 		self.id = id
@@ -107,6 +109,7 @@ class Checkout:
 		self.isbn = isbn
 		self.checkout_date = checkout_date
 		self.due_date = due_date
+		self.renewal_date = renewal_date
 		self.returned_date = returned_date
 
 	def serialize(self) -> dict[str, str]:
@@ -116,6 +119,9 @@ class Checkout:
 			'isbn': self.isbn,
 			'checkout_date': self.checkout_date.strftime('%Y-%m-%d'),
 			'due_date': self.due_date.strftime('%Y-%m-%d'),
+			'renewal_date': (
+				self.renewal_date.strftime('%Y-%m-%d') if self.renewal_date else ''
+			),
 			'returned_date': (
 				self.returned_date.strftime('%Y-%m-%d') if self.returned_date else ''
 			),
@@ -129,7 +135,12 @@ class Checkout:
 			isbn=row['isbn'],
 			checkout_date=string_to_date(row['checkout_date']),
 			due_date=string_to_date(row['due_date']),
-			returned_date=string_to_date(row['returned_date']),
+			renewal_date=(
+				string_to_date(row['renewal_date']) if row['renewal_date'] else None
+			),
+			returned_date=(
+				string_to_date(row['returned_date']) if row['returned_date'] else None
+			),
 		)
 
 	def __str__(self):
