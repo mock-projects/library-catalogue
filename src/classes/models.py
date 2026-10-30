@@ -3,22 +3,25 @@ from datetime import date
 from utilities.util import string_to_date
 
 class Book:
+	id: int
 	isbn: str
 	title: str
 	author: str
 	year: int
 
-	def __init__(self, isbn: str, title: str, author: str, year: int):
+	def __init__(self, id: int, isbn: str, title: str, author: str, year: int):
+		self.id = id
 		self.isbn = isbn
 		self.title = title
 		self.author = author
 		self.year = year
 
 	def __str__(self):
-		return f'"{self.title}" by {self.author}'
+		return f'ID {self.id}: "{self.title}" by {self.author}'
 
 	def serialize(self) -> dict[str, str]:
 		return {
+			'id': str(self.id),
 			'isbn': self.isbn,
 			'title': self.title,
 			'author': self.author,
@@ -28,6 +31,7 @@ class Book:
 	@staticmethod
 	def deserialize(row: dict[str, str]) -> 'Book':
 		return Book(
+			id=int(row['id']),
 			isbn=row['isbn'],
 			title=row['title'],
 			author=row['author'],
@@ -87,7 +91,7 @@ class User:
 class Checkout:
 	id: int
 	user_id: int
-	isbn: str
+	book_id: int
 	checkout_date: date
 	due_date: date
 	renewal_date: date | None
@@ -97,7 +101,7 @@ class Checkout:
 		self,
 		id: int,
 		user_id: int,
-		isbn: str,
+		book_id: int,
 		checkout_date: date,
 		due_date: date,
 		renewal_date: date | None,
@@ -105,7 +109,7 @@ class Checkout:
 	):
 		self.id = id
 		self.user_id = user_id
-		self.isbn = isbn
+		self.book_id = book_id
 		self.checkout_date = checkout_date
 		self.due_date = due_date
 		self.renewal_date = renewal_date
@@ -115,7 +119,7 @@ class Checkout:
 		return {
 			'id': str(self.id),
 			'user_id': str(self.user_id),
-			'isbn': self.isbn,
+			'book_id': str(self.book_id),
 			'checkout_date': self.checkout_date.strftime('%Y-%m-%d'),
 			'due_date': self.due_date.strftime('%Y-%m-%d'),
 			'renewal_date': (
@@ -131,7 +135,7 @@ class Checkout:
 		return Checkout(
 			id=int(row['id']),
 			user_id=int(row['user_id']),
-			isbn=row['isbn'],
+			book_id=int(row['book_id']),
 			checkout_date=string_to_date(row['checkout_date']),
 			due_date=string_to_date(row['due_date']),
 			renewal_date=(
@@ -148,4 +152,4 @@ class Checkout:
 			if self.returned_date
 			else f'due by {self.due_date}'
 		)
-		return f'User {self.user_id} checked out book {self.isbn} on {self.checkout_date}, {return_string}'
+		return f'User {self.user_id} checked out book {self.book_id} on {self.checkout_date}, {return_string}'

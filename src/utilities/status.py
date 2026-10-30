@@ -32,7 +32,7 @@ def print_checkouts(catalog: CatalogData):
 		if active_checkouts:
 			print(f'=== {user.first_name} {user.last_name} ===')
 			for checkout in active_checkouts:
-				book = catalog.get_book_by_isbn(checkout.isbn)
+				book = catalog.get_book_by_id(checkout.book_id)
 				print(
 					f'{book.title} (borrowed on {checkout.checkout_date}, due on {checkout.due_date})'
 				)

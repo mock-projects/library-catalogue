@@ -12,12 +12,12 @@ BOOKS_FILENAME = os.path.join(DATA_DIRECTORY, 'books.csv')
 USERS_FILENAME = os.path.join(DATA_DIRECTORY, 'users.csv')
 CHECKOUTS_FILENAME = os.path.join(DATA_DIRECTORY, 'checkouts.csv')
 
-BOOKS_FIELDNAMES = ['isbn', 'title', 'author', 'year']
+BOOKS_FIELDNAMES = ['id', 'isbn', 'title', 'author', 'year']
 USERS_FIELDNAMES = ['id', 'first_name', 'last_name', 'email', 'fines_due']
 CHECKOUTS_FIELDNAMES = [
 	'id',
 	'user_id',
-	'isbn',
+	'book_id',
 	'checkout_date',
 	'due_date',
 	'renewal_date',
@@ -33,7 +33,7 @@ class CatalogData:
 
 	def __init__(self):
 		self.books = Data(
-			BOOKS_FILENAME, BOOKS_FIELDNAMES, 'isbn', Book.serialize, Book.deserialize
+			BOOKS_FILENAME, BOOKS_FIELDNAMES, 'id', Book.serialize, Book.deserialize
 		)
 		self.users = Data(
 			USERS_FILENAME, USERS_FIELDNAMES, 'id', User.serialize, User.deserialize
@@ -46,8 +46,11 @@ class CatalogData:
 			Checkout.deserialize,
 		)
 
-	def get_book_by_isbn(self, isbn: str) -> Book:
-		return self.books.read_one(isbn)
+	def get_book_by_id(self, book_id: int) -> Book:
+		return self.books.read_one(book_id)
+
+	def get_books_by_isbn(self, isbn: str) -> list[Book]:
+		return [book for book in self.books.read_all() if book.isbn == isbn]
 
 	def get_user_by_id(self, user_id: int) -> User:
 		return self.users.read_one(user_id)
@@ -63,7 +66,7 @@ class CatalogData:
 		return [
 			checkout
 			for checkout in self.checkouts.read_all()
-			if checkout.isbn == book.isbn
+			if checkout.book_id == book.id
 		]
 
 	def is_book_available(self, book: Book) -> bool:
@@ -80,7 +83,7 @@ class CatalogData:
 		checkout = Checkout(
 			id=len(self.checkouts.read_all()) + 1,
 			user_id=user.id,
-			isbn=book.isbn,
+			book_id=book.id,
 			checkout_date=today,
 			due_date=due_date,
 			renewal_date=None,

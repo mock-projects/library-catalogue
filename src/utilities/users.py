@@ -67,13 +67,13 @@ def print_checkout_history(user: User, catalog: CatalogData):
 		print('None.')
 	else:
 		for checkout in currently_borrowed:
-			book = catalog.get_book_by_isbn(checkout.isbn)
+			book = catalog.get_book_by_id(checkout.book_id)
 			print(book)
 	print()
 
 	print(f'Checkout history for user {user.first_name} {user.last_name}:')
 	for checkout in checkouts:
-		book = catalog.get_book_by_isbn(checkout.isbn)
+		book = catalog.get_book_by_id(checkout.book_id)
 		return_string = (
 			f'returned on {checkout.returned_date}'
 			if checkout.returned_date
@@ -144,7 +144,7 @@ def renew_book(user: User, catalog: CatalogData):
 	checkout = prompt_for_choice(
 		'Choose a book to renew:',
 		[
-			(checkout, str(catalog.get_book_by_isbn(checkout.isbn)))
+			(checkout, str(catalog.get_book_by_id(checkout.book_id)))
 			for checkout in renewable_checkouts
 		],
 	)
@@ -152,7 +152,7 @@ def renew_book(user: User, catalog: CatalogData):
 	if checkout is None:
 		raise ValueError('Checkout not found.')
 
-	book = catalog.get_book_by_isbn(checkout.isbn)
+	book = catalog.get_book_by_id(checkout.book_id)
 	print(f'Book selected: {book}')
 	if not prompt_for_confirmation('Confirm renewal?'):
 		return
@@ -178,7 +178,7 @@ def return_book(user: User, catalog: CatalogData):
 	checkout = prompt_for_choice(
 		'Choose a book to return:',
 		[
-			(checkout, str(catalog.get_book_by_isbn(checkout.isbn)))
+			(checkout, str(catalog.get_book_by_id(checkout.book_id)))
 			for checkout in current_checkouts
 		],
 	)
@@ -186,7 +186,7 @@ def return_book(user: User, catalog: CatalogData):
 	if checkout is None:
 		raise ValueError('Checkout not found.')
 
-	book = catalog.get_book_by_isbn(checkout.isbn)
+	book = catalog.get_book_by_id(checkout.book_id)
 	print(f'Book selected: {book}')
 	if not prompt_for_confirmation('Confirm return?'):
 		return
