@@ -135,8 +135,12 @@ class Checkout:
 			isbn=row['isbn'],
 			checkout_date=string_to_date(row['checkout_date']),
 			due_date=string_to_date(row['due_date']),
-			renewal_date=string_to_date(row['renewal_date']),
-			returned_date=string_to_date(row['returned_date']),
+			renewal_date=(
+				string_to_date(row['renewal_date']) if row['renewal_date'] else None
+			),
+			returned_date=(
+				string_to_date(row['returned_date']) if row['returned_date'] else None
+			),
 		)
 
 	def __str__(self):
