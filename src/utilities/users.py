@@ -1,4 +1,4 @@
-from classes.catalog import BookUnavailableException, CatalogData
+from classes.catalog import BookUnavailableError, CatalogData
 from classes.models import Book, User
 from utilities.util import (
 	print_subheadline,
@@ -15,7 +15,7 @@ def manage_user(catalog: CatalogData):
 	)
 
 	if user is None:
-		raise Exception('User not found.')
+		raise ValueError('User not found.')
 
 	# User manageemnt loop
 	while True:
@@ -89,7 +89,7 @@ def checkout_book(user: User, catalog: CatalogData):
 	)
 
 	if book is None:
-		raise Exception('Book not found.')
+		raise ValueError('Book not found.')
 
 	print(f'Book selected: {book}')
 
@@ -109,7 +109,7 @@ def checkout_book(user: User, catalog: CatalogData):
 
 	try:
 		catalog.checkout_book(user, book)
-	except BookUnavailableException:
+	except BookUnavailableError:
 		print('Book is not available for checkout.')
 		return
 
@@ -149,6 +149,9 @@ def renew_book(user: User, catalog: CatalogData):
 		],
 	)
 
+	if checkout is None:
+		raise ValueError('Checkout not found.')
+
 	book = catalog.get_book_by_isbn(checkout.isbn)
 	print(f'Book selected: {book}')
 	if not prompt_for_confirmation('Confirm renewal?'):
@@ -181,7 +184,7 @@ def return_book(user: User, catalog: CatalogData):
 	)
 
 	if checkout is None:
-		raise Exception('Checkout not found.')
+		raise ValueError('Checkout not found.')
 
 	book = catalog.get_book_by_isbn(checkout.isbn)
 	print(f'Book selected: {book}')
@@ -190,7 +193,7 @@ def return_book(user: User, catalog: CatalogData):
 
 	catalog.return_book(checkout)
 	if checkout.returned_date is None:
-		raise Exception("Book wasn't returned.")
+		raise ValueError("Book wasn't returned.")
 
 	# TODO
 	# This conditional block needs to be audited.

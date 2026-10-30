@@ -11,7 +11,7 @@ def search_catalog(catalog: CatalogData):
 	)
 
 	if book is None:
-		raise Exception('Book not found.')
+		raise ValueError('Book not found.')
 
 	print()
 	print(f'Title: {book.title}')

@@ -72,7 +72,7 @@ class CatalogData:
 
 	def checkout_book(self, user: User, book: Book):
 		if not self.is_book_available(book):
-			raise BookUnavailableException
+			raise BookUnavailableError('Book is currently unavailable')
 		today = datetime.now(tz=timezone.utc).date()
 		due_date = today + timedelta(days=CHECKOUT_PERIOD)
 
@@ -93,16 +93,16 @@ class CatalogData:
 		Extends the allowable checkout period of a user's book.
 		"""
 		if checkout.returned_date is not None:
-			raise Exception('Checkout has already been returned')
+			raise ValueError('Checkout has already been returned')
 		elif checkout.renewal_date is not None:
-			raise Exception('Checkout has already been renewed once')
+			raise ValueError('Checkout has already been renewed once')
 
 		checkout.renewal_date = datetime.now(tz=timezone.utc).date()
 		self.checkouts.update_one(checkout)
 
 	def return_book(self, checkout: Checkout):
 		if checkout.returned_date is not None:
-			raise Exception('Checkout has already been returned')
+			raise ValueError('Checkout has already been returned')
 
 		checkout.returned_date = datetime.now(tz=timezone.utc).date()
 		self.checkouts.update_one(checkout)
@@ -124,5 +124,5 @@ class CatalogData:
 		user.fines_due = fine
 		self.users.update_one(user)
 
-class BookUnavailableException(Exception):
+class BookUnavailableError(ValueError):
 	pass
