@@ -1,8 +1,10 @@
 import os
 
 from datetime import datetime, timedelta, timezone
+from classes.book import Book
+from classes.checkout import Checkout
 from classes.data import Data
-from classes.models import Book, Checkout, User
+from classes.user import User
 
 # 21-day checkout period
 CHECKOUT_PERIOD = 21

@@ -1,5 +1,6 @@
 from classes.catalog import BookUnavailableError, CatalogData
-from classes.models import Book, User
+from classes.book import Book
+from classes.user import User
 from utilities.util import (
 	print_subheadline,
 	prompt_for_choice,

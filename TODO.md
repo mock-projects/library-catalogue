@@ -9,7 +9,7 @@ The project is a working CLI prototype for a library catalog, but the data model
 - Problem: the system treats the `isbn` as the primary identity for both the book record and the individual copy being checked out.
 - Why it matters: duplicate ISBNs create repeated catalog entries and mix checkout history across multiple copies.
 - Suggested fix: introduce a `Book` model for metadata (title, author, ISBN) and a `BookCopy`/inventory model for unique IDs tied to each physical copy.
-- Related files: `src/classes/catalog.py`, `src/classes/models.py`, `src/data/books.csv`
+- Related files: `src/classes/catalog.py`, `src/classes/book.py`, `src/data/books.csv`
 
 ### 2. Fix availability checks for duplicate ISBNs
 - Problem: `CatalogData.is_book_available()` checks whether all historical checkouts for a given ISBN were returned. This treats all copies as one shared item.
