@@ -1,19 +1,35 @@
 import os
-from datetime import datetime, timedelta, timezone
 
+from datetime import datetime, timedelta, timezone
 from classes.data import Data
 from classes.models import Book, Checkout, User
 
 # 21-day checkout period
 CHECKOUT_PERIOD = 21
 
+# Obtain the data
 DATA_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+
 BOOKS_FILENAME = os.path.join(DATA_DIRECTORY, 'books.csv')
 USERS_FILENAME = os.path.join(DATA_DIRECTORY, 'users.csv')
 CHECKOUTS_FILENAME = os.path.join(DATA_DIRECTORY, 'checkouts.csv')
 
-BOOKS_FIELDNAMES = ['id', 'isbn', 'title', 'author', 'year']
-USERS_FIELDNAMES = ['id', 'first_name', 'last_name', 'email', 'fines_due']
+BOOKS_FIELDNAMES = [
+	'id',
+	'isbn',
+	'title',
+	'author',
+	'year',
+]
+
+USERS_FIELDNAMES = [
+	'id',
+	'first_name',
+	'last_name',
+	'email',
+	'fines_due',
+]
+
 CHECKOUTS_FIELDNAMES = [
 	'id',
 	'user_id',
@@ -33,11 +49,21 @@ class CatalogData:
 
 	def __init__(self):
 		self.books = Data(
-			BOOKS_FILENAME, BOOKS_FIELDNAMES, 'id', Book.serialize, Book.deserialize
+			BOOKS_FILENAME,
+			BOOKS_FIELDNAMES,
+			'id',
+			Book.serialize,
+			Book.deserialize,
 		)
+
 		self.users = Data(
-			USERS_FILENAME, USERS_FIELDNAMES, 'id', User.serialize, User.deserialize
+			USERS_FILENAME,
+			USERS_FIELDNAMES,
+			'id',
+			User.serialize,
+			User.deserialize,
 		)
+
 		self.checkouts = Data(
 			CHECKOUTS_FILENAME,
 			CHECKOUTS_FIELDNAMES,
@@ -46,21 +72,30 @@ class CatalogData:
 			Checkout.deserialize,
 		)
 
+	##########################
+	# READ methods for BOOKS #
+	##########################
+
 	def get_book_by_id(self, book_id: int) -> Book:
 		return self.books.read_one(book_id)
 
 	def get_books_by_isbn(self, isbn: str) -> list[Book]:
 		return [book for book in self.books.read_all() if book.isbn == isbn]
 
+	def is_book_available(self, book: Book) -> bool:
+		checkouts = self.get_checkouts_for_book(book)
+		return all(checkout.returned_date is not None for checkout in checkouts)
+
+	##########################
+	# READ methods for USERS #
+	##########################
+
 	def get_user_by_id(self, user_id: int) -> User:
 		return self.users.read_one(user_id)
 
-	def get_checkouts_for_user(self, user: User) -> list[Checkout]:
-		return [
-			checkout
-			for checkout in self.checkouts.read_all()
-			if checkout.user_id == user.id
-		]
+	##############################
+	# READ methods for CHECKOUTS #
+	##############################
 
 	def get_checkouts_for_book(self, book: Book) -> list[Checkout]:
 		return [
@@ -69,9 +104,16 @@ class CatalogData:
 			if checkout.book_id == book.id
 		]
 
-	def is_book_available(self, book: Book) -> bool:
-		checkouts = self.get_checkouts_for_book(book)
-		return all(checkout.returned_date is not None for checkout in checkouts)
+	def get_checkouts_for_user(self, user: User) -> list[Checkout]:
+		return [
+			checkout
+			for checkout in self.checkouts.read_all()
+			if checkout.user_id == user.id
+		]
+
+	####################
+	# MUTATION methods #
+	####################
 
 	def checkout_book(self, user: User, book: Book):
 		if not self.is_book_available(book):
@@ -92,9 +134,9 @@ class CatalogData:
 		self.checkouts.write_one(checkout)
 
 	def renew_book(self, checkout: Checkout):
-		"""
+		'''
 		Extends the allowable checkout period of a user's book.
-		"""
+		'''
 		if checkout.returned_date is not None:
 			raise ValueError('Checkout has already been returned')
 		elif checkout.renewal_date is not None:

@@ -193,7 +193,7 @@ def return_book(user: User, catalog: CatalogData):
 
 	catalog.return_book(checkout)
 	if checkout.returned_date is None:
-		raise ValueError("Book wasn't returned.")
+		raise ValueError('Book wasn\'t returned.')
 
 	# TODO
 	# This conditional block needs to be audited.

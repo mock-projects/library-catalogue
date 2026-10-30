@@ -22,7 +22,7 @@ def search_catalog(catalog: CatalogData):
 	print(f'Year: {book.year}')
 	print(f'ISBN: {book.isbn}')
 	print(
-		f'Available for checkout: {"Yes" if book_is_available else "No"}'
+		f'Available for checkout: {'Yes' if book_is_available else 'No'}'
 	)
 
 	checkouts = catalog.get_checkouts_for_book(book)
