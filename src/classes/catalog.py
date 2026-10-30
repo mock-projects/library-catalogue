@@ -1,9 +1,8 @@
-import datetime
 import os
+from datetime import datetime, timedelta, timezone
 
 from classes.data import Data
 from classes.models import Book, Checkout, User
-from utilities.util import string_to_date
 
 # 21-day checkout period
 CHECKOUT_PERIOD = 21
@@ -74,8 +73,8 @@ class CatalogData:
 	def checkout_book(self, user: User, book: Book):
 		if not self.is_book_available(book):
 			raise BookUnavailableException
-		today = datetime.date.today()
-		due_date = today + datetime.timedelta(days=CHECKOUT_PERIOD)
+		today = datetime.now(tz=timezone.utc).date()
+		due_date = today + timedelta(days=CHECKOUT_PERIOD)
 
 		# Create new checkout
 		checkout = Checkout(
@@ -98,14 +97,14 @@ class CatalogData:
 		elif checkout.renewal_date is not None:
 			raise Exception('Checkout has already been renewed once')
 
-		checkout.renewal_date = datetime.date.today()
+		checkout.renewal_date = datetime.now(tz=timezone.utc).date()
 		self.checkouts.update_one(checkout)
 
 	def return_book(self, checkout: Checkout):
 		if checkout.returned_date is not None:
 			raise Exception('Checkout has already been returned')
 
-		checkout.returned_date = datetime.date.today()
+		checkout.returned_date = datetime.now(tz=timezone.utc).date()
 		self.checkouts.update_one(checkout)
 
 	def pay_fines(self, user: User):

@@ -1,7 +1,7 @@
 '''Utility functions used by the application.'''
 
-import datetime
 from collections.abc import Callable, Sequence
+from datetime import date
 from typing import Optional, TypeVar
 
 T = TypeVar('T')
@@ -24,9 +24,9 @@ def print_subheadline(content: str):
 	print('-' * (length + 4))
 	print()
 
-def string_to_date(date_string: str) -> datetime.date:
+def string_to_date(date_string: str) -> date:
 	year, month, day = date_string.split('-')
-	return datetime.date(int(year), int(month), int(day))
+	return date(int(year), int(month), int(day))
 
 def prompt_for_confirmation(prompt: str) -> bool:
 	response = input(f'{prompt} (y/n): ').strip().lower()
