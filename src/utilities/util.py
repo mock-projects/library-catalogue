@@ -38,7 +38,7 @@ def prompt_for_choice(prompt: str, options: Sequence[tuple[T, str]]) -> T | None
 		print(f'({i + 1}) {title}')
 	# Repeat until a valid choice is selected
 	while True:
-		choice = input(f'Choose an option: ').strip()
+		choice = input('Choose an option: ').strip()
 		print()
 		if choice.isdigit():
 			index = int(choice) - 1

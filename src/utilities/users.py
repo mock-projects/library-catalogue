@@ -205,8 +205,7 @@ def return_book(user: User, catalog: CatalogData):
 			60 * 60 * 24
 		)
 		fine = days_overdue * 0.20
-		if fine > 5.00:
-			fine = 5.00
+		fine = min(fine, 5.00)
 		catalog.set_fine(user, fine)
 		print(f'Book returned successfully. Fine of ${fine:.2f} applied.')
 

@@ -13,13 +13,15 @@ def search_catalog(catalog: CatalogData):
 	if book is None:
 		raise ValueError('Book not found.')
 
+	book_is_available = catalog.is_book_available(book)
+
 	print()
 	print(f'Title: {book.title}')
 	print(f'Author: {book.author}')
 	print(f'Year: {book.year}')
 	print(f'ISBN: {book.isbn}')
 	print(
-		f'Available for checkout: {"Yes" if catalog.is_book_available(book) else "No"}'
+		f'Available for checkout: {"Yes" if book_is_available else "No"}'
 	)
 
 	checkouts = catalog.get_checkouts_for_book(book)
