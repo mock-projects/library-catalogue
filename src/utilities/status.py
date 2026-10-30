@@ -58,7 +58,7 @@ def print_book_analytics(catalog):
 	# This function needs to be audited.
 	# Provide feedback in comments, and determine if there are any bugs.
 
-	checkout_counts = dict()
+	checkout_counts = {}
 
 	for book in catalog.books.read_all():
 		checkout_counts[book.title] = len(catalog.get_checkouts_for_book(book))
@@ -74,7 +74,7 @@ def print_book_analytics(catalog):
 
 	# Average checkout duration
 	print('\nBooks ordered by average checkout duration')
-	checkout_durations = dict()
+	checkout_durations = {}
 	for book in catalog.books.read_all():
 		checkouts = catalog.get_checkouts_for_book(book)
 		checkout_duration_sum = 0

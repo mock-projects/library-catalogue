@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Optional
 
 from utilities.util import string_to_date
 
@@ -91,8 +90,8 @@ class Checkout:
 	isbn: str
 	checkout_date: date
 	due_date: date
-	renewal_date: Optional[date]
-	returned_date: Optional[date]
+	renewal_date: date | None
+	returned_date: date | None
 
 	def __init__(
 		self,
@@ -101,8 +100,8 @@ class Checkout:
 		isbn: str,
 		checkout_date: date,
 		due_date: date,
-		renewal_date: Optional[date],
-		returned_date: Optional[date],
+		renewal_date: date | None,
+		returned_date: date | None,
 	):
 		self.id = id
 		self.user_id = user_id

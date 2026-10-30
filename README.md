@@ -3,7 +3,7 @@ This is a command-line library catalog application built for the Byte County Pub
 
 ## Setup
 ### Requirements
-- Python 3.8 or later.
+- Python 3.10 or later.
 
 ## Usage
 Run the application as:

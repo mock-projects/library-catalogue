@@ -1,8 +1,8 @@
 '''Utility functions used by the application.'''
 
-import datetime
 from collections.abc import Callable, Sequence
-from typing import Optional, TypeVar
+from datetime import date
+from typing import TypeVar
 
 T = TypeVar('T')
 
@@ -24,21 +24,21 @@ def print_subheadline(content: str):
 	print('-' * (length + 4))
 	print()
 
-def string_to_date(date_string: str) -> datetime.date:
+def string_to_date(date_string: str) -> date:
 	year, month, day = date_string.split('-')
-	return datetime.date(int(year), int(month), int(day))
+	return date(int(year), int(month), int(day))
 
 def prompt_for_confirmation(prompt: str) -> bool:
 	response = input(f'{prompt} (y/n): ').strip().lower()
 	return response == 'y'
 
-def prompt_for_choice(prompt: str, options: Sequence[tuple[T, str]]) -> Optional[T]:
+def prompt_for_choice(prompt: str, options: Sequence[tuple[T, str]]) -> T | None:
 	print(prompt)
 	for i, (_, title) in enumerate(options):
 		print(f'({i + 1}) {title}')
 	# Repeat until a valid choice is selected
 	while True:
-		choice = input(f'Choose an option: ').strip()
+		choice = input('Choose an option: ').strip()
 		print()
 		if choice.isdigit():
 			index = int(choice) - 1
@@ -49,7 +49,7 @@ def prompt_for_choice(prompt: str, options: Sequence[tuple[T, str]]) -> Optional
 
 def search_for_choice(
 	prompt: str, options: list[T], is_match: Callable[[T, str], bool]
-) -> Optional[T]:
+) -> T | None:
 	# No options available
 	if len(options) == 0:
 		return None
