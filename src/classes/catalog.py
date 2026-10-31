@@ -199,16 +199,22 @@ class CatalogData:
 		)
 		self.checkouts.write_one(checkout)
 
-	def renew_book(self, checkout: Checkout):
+	def renew_book(self, checkout: Checkout, extension: int = 3):
 		'''
 		Extends the allowable checkout period of a user's book.
+		The `extension` parameter is measured in days.
 		'''
 		if checkout.returned_date is not None:
 			raise ValueError('Checkout has already been returned')
 		elif checkout.renewal_date is not None:
 			raise ValueError('Checkout has already been renewed once')
+		elif extension <= 0:
+			raise ValueError('Renewal period must be greater than zero days')
 
-		checkout.renewal_date = datetime.now(tz=timezone.utc).date()
+		today = datetime.now(tz=timezone.utc).date()
+		due_date = today + timedelta(days=extension)
+		checkout.renewal_date = today
+		checkout.due_date = due_date
 		self.checkouts.update_one(checkout)
 
 	def return_book(self, checkout: Checkout):
