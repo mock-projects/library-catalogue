@@ -1,4 +1,4 @@
-id,user_id,book_id,checkout_date,due_date,renewal_date,returned_date
+id,user_id,copy_id,checkout_date,due_date,renewal_date,returned_date
 1,19,33,2024-01-07,2024-01-28,,2024-01-29
 2,5,25,2024-01-09,2024-01-30,,2024-01-24
 3,17,3,2024-01-10,2024-01-31,,2024-01-23

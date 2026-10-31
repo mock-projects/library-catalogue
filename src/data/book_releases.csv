@@ -1,39 +1,38 @@
-id,isbn,title,author,year
-1,9781435171480,A Tale of Two Cities,Charles Dickens,1859
-2,9780156012195,The Little Prince,Antoine de Saint-Exupéry,1943
-3,9780062390622,The Alchemist,Paulo Coelho,1988
-4,9781408855652,Harry Potter and the Philosopher's Stone,J. K. Rowling,1997
-5,9780062073488,And Then There Were None,Agatha Christie,1939
-6,9780385093798,Dream of the Red Chamber,Cao Xueqin,1791
-7,9780547928227,The Hobbit,J. R. R. Tolkien,1937
-8,9798749522310,Alice's Adventures in Wonderland,Lewis Carroll,1865
-9,9780064471046,"The Lion, the Witch and the Wardrobe",C. S. Lewis,1950
-10,9781519430144,She: A History of Adventure,H. Rider Haggard,1887
-11,9782266144346,The Da Vinci Code,Dan Brown,2003
-12,9781338878936,Harry Potter and the Chamber of Secrets,J. K. Rowling,1998
-13,9780316769174,The Catcher in the Rye,J. D. Salinger,1951
-14,9781338878943,Harry Potter and the Prisoner of Azkaban,J. K. Rowling,1999
-15,9781338878950,Harry Potter and the Goblet of Fire,J. K. Rowling,2000
-16,9781338878967,Harry Potter and the Order of Phoenix,J. K. Rowling,2003
-17,9781338878974,Harry Potter and the Half-Blood Prince,J. K. Rowling,2005
-18,9781338878981,Harry Potter and the Deathly Hallows,J. K. Rowling,2007
-19,9781455554294,The Bridges of Madison County,Robert James Waller,1992
-20,9780060883287,One Hundred Years of Solitude,Gabriel Garcia Marquez,1967
-21,9780679723165,Lolita,Vladimir Nabokov,1955
-22,9781788004749,Heidi,Johanna Spyri,1880
-23,9781501175336,The Common Sense Book of Baby and Child Care,Benjamin Spock,1946
-24,9780553213133,Anne of Green Gables,Lucy Maud Montgomery,1908
-25,9781840227871,Black Beauty,Anna Sewell,1877
-26,9788845210662,The Name of the Rose,Umberto Eco,1980
-27,9780425177181,The Eagle Has Landed,Jack Higgins,1975
-28,9780743277709,Watership Down,Richard Adams,1972
-29,9781583225691,The Hite Report,Shere Hite,1976
-30,9780064400558,Charlotte's Web,E.B. White,1952
-31,9780802144669,The Ginger Man,J. P. Donleavy,1955
-32,9780310337508,The Purpose Driven Life,Rick Warren,2002
-33,9780723247708,The Tale of Peter Rabbit,Beatrix Potter,1902
-34,9781476793313,Jonathan Livingston Seagull,Richard Bach,1970
-35,9780399208539,The Very Hungry Caterpillar,Eric Carle,1969
-36,9780937539651,A Message to Garcia,Elbert Hubbard,1899
-37,9780060935467,To Kill a Mockingbird,Harper Lee,1960
-38,9798749522310,Alice's Adventures in Wonderland,Lewis Carroll,1865
+isbn,title,author,year
+9781435171480,A Tale of Two Cities,Charles Dickens,1859
+9780156012195,The Little Prince,Antoine de Saint-Exupéry,1943
+9780062390622,The Alchemist,Paulo Coelho,1988
+9781408855652,Harry Potter and the Philosopher's Stone,J. K. Rowling,1997
+9780062073488,And Then There Were None,Agatha Christie,1939
+9780385093798,Dream of the Red Chamber,Cao Xueqin,1791
+9780547928227,The Hobbit,J. R. R. Tolkien,1937
+9798749522310,Alice's Adventures in Wonderland,Lewis Carroll,1865
+9780064471046,"The Lion, the Witch and the Wardrobe",C. S. Lewis,1950
+9781519430144,She: A History of Adventure,H. Rider Haggard,1887
+9782266144346,The Da Vinci Code,Dan Brown,2003
+9781338878936,Harry Potter and the Chamber of Secrets,J. K. Rowling,1998
+9780316769174,The Catcher in the Rye,J. D. Salinger,1951
+9781338878943,Harry Potter and the Prisoner of Azkaban,J. K. Rowling,1999
+9781338878950,Harry Potter and the Goblet of Fire,J. K. Rowling,2000
+9781338878967,Harry Potter and the Order of Phoenix,J. K. Rowling,2003
+9781338878974,Harry Potter and the Half-Blood Prince,J. K. Rowling,2005
+9781338878981,Harry Potter and the Deathly Hallows,J. K. Rowling,2007
+9781455554294,The Bridges of Madison County,Robert James Waller,1992
+9780060883287,One Hundred Years of Solitude,Gabriel Garcia Marquez,1967
+9780679723165,Lolita,Vladimir Nabokov,1955
+9781788004749,Heidi,Johanna Spyri,1880
+9781501175336,The Common Sense Book of Baby and Child Care,Benjamin Spock,1946
+9780553213133,Anne of Green Gables,Lucy Maud Montgomery,1908
+9781840227871,Black Beauty,Anna Sewell,1877
+9788845210662,The Name of the Rose,Umberto Eco,1980
+9780425177181,The Eagle Has Landed,Jack Higgins,1975
+9780743277709,Watership Down,Richard Adams,1972
+9781583225691,The Hite Report,Shere Hite,1976
+9780064400558,Charlotte's Web,E.B. White,1952
+9780802144669,The Ginger Man,J. P. Donleavy,1955
+9780310337508,The Purpose Driven Life,Rick Warren,2002
+9780723247708,The Tale of Peter Rabbit,Beatrix Potter,1902
+9781476793313,Jonathan Livingston Seagull,Richard Bach,1970
+9780399208539,The Very Hungry Caterpillar,Eric Carle,1969
+9780937539651,A Message to Garcia,Elbert Hubbard,1899
+9780060935467,To Kill a Mockingbird,Harper Lee,1960
