@@ -1,5 +1,5 @@
 from classes.catalog import CatalogData
-from classes.models import Book
+from classes.book_release import BookRelease
 from utilities.util import print_subheadline, search_for_choice
 
 def search_catalog(catalog: CatalogData):
@@ -7,7 +7,7 @@ def search_catalog(catalog: CatalogData):
 	book = search_for_choice(
 		'Search for book by title, author, or ISBN',
 		catalog.books.read_all(),
-		Book.is_query_match,
+		BookRelease.is_query_match,
 	)
 
 	if book is None:
@@ -16,12 +16,13 @@ def search_catalog(catalog: CatalogData):
 	book_is_available = catalog.is_book_available(book)
 
 	print()
+	print(f'ISBN: {book.isbn}')
 	print(f'Title: {book.title}')
 	print(f'Author: {book.author}')
 	print(f'Year: {book.year}')
 	print(f'ISBN: {book.isbn}')
 	print(
-		f'Available for checkout: {"Yes" if book_is_available else "No"}'
+		f'Available for checkout: {'Yes' if book_is_available else 'No'}'
 	)
 
 	checkouts = catalog.get_checkouts_for_book(book)

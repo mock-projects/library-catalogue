@@ -10,9 +10,9 @@ def print_headline(content: str):
 	length = len(content)
 	print()
 	print('=' * (length + 6))
-	print(f'|  {" " * length}  |')
+	print(f'|  {' ' * length}  |')
 	print(f'|  {content}  |')
-	print(f'|  {" " * length}  |')
+	print(f'|  {' ' * length}  |')
 	print('=' * (length + 6))
 	print()
 

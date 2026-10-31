@@ -32,7 +32,8 @@ def print_checkouts(catalog: CatalogData):
 		if active_checkouts:
 			print(f'=== {user.first_name} {user.last_name} ===')
 			for checkout in active_checkouts:
-				book = catalog.get_book_by_isbn(checkout.isbn)
+				copy = catalog.get_copy_by_id(checkout.copy_id)
+				book = catalog.get_book_by_isbn(copy.isbn)
 				print(
 					f'{book.title} (borrowed on {checkout.checkout_date}, due on {checkout.due_date})'
 				)
@@ -85,9 +86,8 @@ def print_book_analytics(catalog):
 			if not checkout.returned_date:
 				continue
 
-			duration = (
-				checkout.returned_date - checkout.checkout_date
-			).total_seconds() / (60 * 60 * 24)
+			date_difference = checkout.returned_date - checkout.checkout_date
+			duration = date_difference.total_seconds() / (60 * 60 * 24)
 			checkout_duration_sum += duration
 			checkout_duration_count += 1
 
