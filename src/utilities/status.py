@@ -86,9 +86,8 @@ def print_book_analytics(catalog):
 			if not checkout.returned_date:
 				continue
 
-			duration = (
-				checkout.returned_date - checkout.checkout_date
-			).total_seconds() / (60 * 60 * 24)
+			date_difference = checkout.returned_date - checkout.checkout_date
+			duration = date_difference.total_seconds() / (60 * 60 * 24)
 			checkout_duration_sum += duration
 			checkout_duration_count += 1
 

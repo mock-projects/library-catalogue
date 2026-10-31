@@ -82,7 +82,12 @@ def print_checkout_history(user: User, catalog: CatalogData):
 			if checkout.returned_date
 			else f'due by {checkout.due_date}'
 		)
-		print(f'Checked out {book} on {checkout.checkout_date}, {return_string}')
+
+		print(
+			f'Checked out {book} (#{copy.id})',
+			f'on {checkout.checkout_date},',
+			f'{return_string}',
+		)
 
 def checkout_book(user: User, catalog: CatalogData):
 	book = search_for_choice(
@@ -104,7 +109,9 @@ def checkout_book(user: User, catalog: CatalogData):
 	# Provide feedback in comments, and determine if there are any bugs.
 	if user.fines_due > 0:
 		print(
-			f'User has outstanding fines that must be paid first: ${user.fines_due:.2f}'
+			'User has outstanding fines',
+			'that must be paid first:',
+			f'${user.fines_due:.2f}',
 		)
 		if not prompt_for_confirmation('Pay fines?'):
 			return
@@ -127,7 +134,8 @@ def renew_book(user: User, catalog: CatalogData):
 		return
 
 	current_checkouts = [
-		checkout for checkout in checkouts if checkout.returned_date is None
+		checkout for checkout in checkouts
+		if checkout.returned_date is None
 	]
 
 	if not current_checkouts:
@@ -136,7 +144,8 @@ def renew_book(user: User, catalog: CatalogData):
 
 	# Determine whether any of the user's books are eligible for renewal.
 	renewable_checkouts = [
-		checkout for checkout in current_checkouts if checkout.renewal_date is None
+		checkout for checkout in current_checkouts
+		if checkout.renewal_date is None
 	]
 
 	if not renewable_checkouts:
@@ -172,7 +181,8 @@ def return_book(user: User, catalog: CatalogData):
 		return
 
 	current_checkouts = [
-		checkout for checkout in checkouts if checkout.returned_date is None
+		checkout for checkout in checkouts
+		if checkout.returned_date is None
 	]
 
 	if not current_checkouts:
@@ -206,13 +216,15 @@ def return_book(user: User, catalog: CatalogData):
 
 	# Charge a $0.20 fine per day late, up to a maximum of $5.00
 	if checkout.due_date < checkout.returned_date:
-		days_overdue = (checkout.returned_date - checkout.due_date).total_seconds() / (
-			60 * 60 * 24
-		)
+		date_difference = checkout.returned_date - checkout.due_date
+		days_overdue = date_difference.total_seconds() / (60 * 60 * 24)
 		fine = days_overdue * 0.20
 		fine = min(fine, 5.00)
 		catalog.set_fine(user, fine)
-		print(f'Book returned successfully. Fine of ${fine:.2f} applied.')
+		print(
+			'Book returned successfully.',
+			f'Fine of ${fine:.2f} applied.',
+		)
 
 	print('Book returned successfully.')
 
