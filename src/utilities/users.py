@@ -5,6 +5,7 @@ from utilities.util import (
 	print_subheadline,
 	prompt_for_choice,
 	prompt_for_confirmation,
+	prompt_for_float,
 	search_for_choice,
 )
 
@@ -220,7 +221,7 @@ def return_book(user: User, catalog: CatalogData):
 		days_overdue = date_difference.total_seconds() / (60 * 60 * 24)
 		fine = days_overdue * 0.20
 		fine = min(fine, 5.00)
-		catalog.set_fine(user, fine)
+		catalog.add_fine(user, fine)
 		print(
 			'Book returned successfully.',
 			f'Fine of ${fine:.2f} applied.',
@@ -229,16 +230,11 @@ def return_book(user: User, catalog: CatalogData):
 	print('Book returned successfully.')
 
 def pay_fines(user: User, catalog: CatalogData):
-	# TODO
-	# This function needs to be audited.
-	# Provide feedback in comments, and determine if there are any bugs.
 	if user.fines_due == 0:
 		print('No fines are due.')
 		return
 
 	print(f'Total fines due: ${user.fines_due:.2f}')
-	if not prompt_for_confirmation('Pay fines?'):
-		return
-
-	catalog.pay_fines(user)
+	payment = prompt_for_float('Enter payment amount:')
+	catalog.pay_fines(user, payment)
 	print('Fines paid successfully.')
