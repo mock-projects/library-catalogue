@@ -16,7 +16,7 @@ def search_catalog(catalog: CatalogData):
 	book_is_available = catalog.is_book_available(book)
 
 	print()
-	print(f'ID: {book.id}')
+	print(f'ISBN: {book.isbn}')
 	print(f'Title: {book.title}')
 	print(f'Author: {book.author}')
 	print(f'Year: {book.year}')

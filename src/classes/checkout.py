@@ -5,7 +5,7 @@ from utilities.util import string_to_date
 class Checkout:
 	id: int
 	user_id: int
-	book_id: int
+	copy_id: int
 	checkout_date: date
 	due_date: date
 	renewal_date: date | None
@@ -15,7 +15,7 @@ class Checkout:
 		self,
 		id: int,
 		user_id: int,
-		book_id: int,
+		copy_id: int,
 		checkout_date: date,
 		due_date: date,
 		renewal_date: date | None,
@@ -23,7 +23,7 @@ class Checkout:
 	):
 		self.id = id
 		self.user_id = user_id
-		self.book_id = book_id
+		self.copy_id = copy_id
 		self.checkout_date = checkout_date
 		self.due_date = due_date
 		self.renewal_date = renewal_date
@@ -33,7 +33,7 @@ class Checkout:
 		return {
 			'id': str(self.id),
 			'user_id': str(self.user_id),
-			'book_id': str(self.book_id),
+			'copy_id': str(self.copy_id),
 			'checkout_date': self.checkout_date.strftime('%Y-%m-%d'),
 			'due_date': self.due_date.strftime('%Y-%m-%d'),
 			'renewal_date': (
@@ -49,7 +49,7 @@ class Checkout:
 		return Checkout(
 			id=int(row['id']),
 			user_id=int(row['user_id']),
-			book_id=int(row['book_id']),
+			copy_id=int(row['copy_id']),
 			checkout_date=string_to_date(row['checkout_date']),
 			due_date=string_to_date(row['due_date']),
 			renewal_date=(
@@ -66,4 +66,4 @@ class Checkout:
 			if self.returned_date
 			else f'due by {self.due_date}'
 		)
-		return f'User {self.user_id} checked out book {self.book_id} on {self.checkout_date}, {return_string}'
+		return f'User {self.user_id} checked out book #{self.copy_id} on {self.checkout_date}, {return_string}'

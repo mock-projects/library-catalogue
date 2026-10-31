@@ -1,24 +1,21 @@
 '''Represents a release of a title, unique by isbn only.'''
 class BookRelease:
-	id: int
 	isbn: str
 	title: str
 	author: str
 	year: int
 
-	def __init__(self, id: int, isbn: str, title: str, author: str, year: int):
-		self.id = id
+	def __init__(self, isbn: str, title: str, author: str, year: int):
 		self.isbn = isbn
 		self.title = title
 		self.author = author
 		self.year = year
 
 	def __str__(self):
-		return f'ID {self.id}: "{self.title}" by {self.author}'
+		return f'ISBN {self.isbn}: "{self.title}" by {self.author}'
 
 	def serialize(self) -> dict[str, str]:
 		return {
-			'id': str(self.id),
 			'isbn': self.isbn,
 			'title': self.title,
 			'author': self.author,
@@ -28,7 +25,6 @@ class BookRelease:
 	@staticmethod
 	def deserialize(row: dict[str, str]) -> 'BookRelease':
 		return BookRelease(
-			id=int(row['id']),
 			isbn=row['isbn'],
 			title=row['title'],
 			author=row['author'],
