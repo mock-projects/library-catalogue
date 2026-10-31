@@ -1,7 +1,7 @@
 import os
 
 from datetime import datetime, timedelta, timezone
-from classes.book import Book
+from classes.book_release import BookRelease
 from classes.checkout import Checkout
 from classes.data import Data
 from classes.user import User
@@ -12,7 +12,7 @@ CHECKOUT_PERIOD = 21
 # Obtain the data
 DATA_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 
-BOOKS_FILENAME = os.path.join(DATA_DIRECTORY, 'books.csv')
+BOOKS_FILENAME = os.path.join(DATA_DIRECTORY, 'book_releases.csv')
 USERS_FILENAME = os.path.join(DATA_DIRECTORY, 'users.csv')
 CHECKOUTS_FILENAME = os.path.join(DATA_DIRECTORY, 'checkouts.csv')
 
@@ -45,7 +45,7 @@ CHECKOUTS_FIELDNAMES = [
 class CatalogData:
 	'''Stores all data for the library catalog.'''
 
-	books: Data[Book]
+	books: Data[BookRelease]
 	users: Data[User]
 	checkouts: Data[Checkout]
 
@@ -54,8 +54,8 @@ class CatalogData:
 			BOOKS_FILENAME,
 			BOOKS_FIELDNAMES,
 			'id',
-			Book.serialize,
-			Book.deserialize,
+			BookRelease.serialize,
+			BookRelease.deserialize,
 		)
 
 		self.users = Data(
@@ -78,13 +78,13 @@ class CatalogData:
 	# READ methods for BOOKS #
 	##########################
 
-	def get_book_by_id(self, book_id: int) -> Book:
+	def get_book_by_id(self, book_id: int) -> BookRelease:
 		return self.books.read_one(book_id)
 
-	def get_books_by_isbn(self, isbn: str) -> list[Book]:
+	def get_books_by_isbn(self, isbn: str) -> list[BookRelease]:
 		return [book for book in self.books.read_all() if book.isbn == isbn]
 
-	def is_book_available(self, book: Book) -> bool:
+	def is_book_available(self, book: BookRelease) -> bool:
 		checkouts = self.get_checkouts_for_book(book)
 		return all(checkout.returned_date is not None for checkout in checkouts)
 
@@ -99,7 +99,7 @@ class CatalogData:
 	# READ methods for CHECKOUTS #
 	##############################
 
-	def get_checkouts_for_book(self, book: Book) -> list[Checkout]:
+	def get_checkouts_for_book(self, book: BookRelease) -> list[Checkout]:
 		return [
 			checkout
 			for checkout in self.checkouts.read_all()
@@ -117,7 +117,7 @@ class CatalogData:
 	# MUTATION methods #
 	####################
 
-	def checkout_book(self, user: User, book: Book):
+	def checkout_book(self, user: User, book: BookRelease):
 		if not self.is_book_available(book):
 			raise BookUnavailableError('Book is currently unavailable')
 		today = datetime.now(tz=timezone.utc).date()

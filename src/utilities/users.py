@@ -1,5 +1,5 @@
 from classes.catalog import BookUnavailableError, CatalogData
-from classes.book import Book
+from classes.book_release import BookRelease
 from classes.user import User
 from utilities.util import (
 	print_subheadline,
@@ -86,7 +86,7 @@ def checkout_book(user: User, catalog: CatalogData):
 	book = search_for_choice(
 		'Search for book to checkout by title, author, or ISBN',
 		catalog.books.read_all(),
-		Book.is_query_match,
+		BookRelease.is_query_match,
 	)
 
 	if book is None:

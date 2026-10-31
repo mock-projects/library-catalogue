@@ -1,5 +1,5 @@
 from classes.catalog import CatalogData
-from classes.book import Book
+from classes.book_release import BookRelease
 from utilities.util import print_subheadline, search_for_choice
 
 def search_catalog(catalog: CatalogData):
@@ -7,7 +7,7 @@ def search_catalog(catalog: CatalogData):
 	book = search_for_choice(
 		'Search for book by title, author, or ISBN',
 		catalog.books.read_all(),
-		Book.is_query_match,
+		BookRelease.is_query_match,
 	)
 
 	if book is None:

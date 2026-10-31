@@ -1,3 +1,4 @@
+'''Represents a physical copy of a book. May not have a unique isbn.'''
 class BookCopy:
 	id: int
 	isbn: str

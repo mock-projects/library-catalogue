@@ -1,4 +1,5 @@
-class Book:
+'''Represents a release of a title, unique by isbn only.'''
+class BookRelease:
 	id: int
 	isbn: str
 	title: str
@@ -25,8 +26,8 @@ class Book:
 		}
 
 	@staticmethod
-	def deserialize(row: dict[str, str]) -> 'Book':
-		return Book(
+	def deserialize(row: dict[str, str]) -> 'BookRelease':
+		return BookRelease(
 			id=int(row['id']),
 			isbn=row['isbn'],
 			title=row['title'],
