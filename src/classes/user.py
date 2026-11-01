@@ -4,15 +4,23 @@ class User:
 	last_name: str
 	email: str
 	fines_due: float
+	fines_paid: float
 
 	def __init__(
-		self, id: int, first_name: str, last_name: str, email: str, fines_due: float
+		self,
+		id: int,
+		first_name: str,
+		last_name: str,
+		email: str,
+		fines_due: float = 0.0,
+		fines_paid: float = 0.0,
 	):
 		self.id = id
 		self.first_name = first_name
 		self.last_name = last_name
 		self.email = email
 		self.fines_due = fines_due
+		self.fines_paid = fines_paid
 
 	def __str__(self):
 		return f'{self.first_name} {self.last_name}'
@@ -24,6 +32,7 @@ class User:
 			'last_name': self.last_name,
 			'email': self.email,
 			'fines_due': str(self.fines_due),
+			'fines_paid': str(self.fines_paid),
 		}
 
 	@staticmethod
@@ -34,6 +43,7 @@ class User:
 			last_name=row['last_name'],
 			email=row['email'],
 			fines_due=float(row['fines_due']),
+			fines_paid=float(row['fines_paid']),
 		)
 
 	def is_query_match(self, query: str) -> bool:

@@ -36,6 +36,7 @@ USERS_FIELDNAMES = [
 	'last_name',
 	'email',
 	'fines_due',
+	'fines_paid',
 ]
 
 CHECKOUTS_FIELDNAMES = [
@@ -238,6 +239,7 @@ class CatalogData:
 	def pay_fines(self, user: User, payment: float):
 		# Mark fines as paid
 		user.fines_due -= payment
+		user.fines_paid += payment
 		self.users.update_one(user)
 		self.handle_overpayment(user)
 

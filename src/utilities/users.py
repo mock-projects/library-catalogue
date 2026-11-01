@@ -54,6 +54,7 @@ def view_user_details(user: User, catalog: CatalogData):
 	checkouts = catalog.get_checkouts_for_user(user)
 	print(f'Total checkouts (all time): {len(checkouts)}')
 	print(f'Total fines (all time): ${catalog.get_total_fines(user):.2f}')
+	print(f'Total fines paid (all time): ${user.fines_paid:.2f}')
 	print(f'Total fines due: ${user.fines_due:.2f}')
 
 def print_checkout_history(user: User, catalog: CatalogData):
