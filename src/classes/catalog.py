@@ -176,6 +176,15 @@ class CatalogData:
 			if checkout.user_id == user.id
 		]
 
+	def get_overdue_checkouts_for_user(self, user: User) -> list[Checkout]:
+		today = datetime.now(tz=timezone.utc).date()
+		return [
+			checkout
+			for checkout in self.get_checkouts_for_user(user)
+			if checkout.returned_date is None
+			and checkout.due_date < today
+		]
+
 	def get_total_fines(self, user: User) -> float:
 		total_fines = sum(
 			checkout.calculate_fine()

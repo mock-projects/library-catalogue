@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from classes.catalog import BookUnavailableError, CatalogData
 from classes.book_release import BookRelease
 from classes.user import User
@@ -93,17 +95,33 @@ def print_checkout_history(user: User, catalog: CatalogData):
 		)
 
 def checkout_book(user: User, catalog: CatalogData):
+	# Prevent users from checking out a book while they have overdue checkouts.
+	overdue_checkouts = catalog.get_overdue_checkouts_for_user(user)
+	while len(overdue_checkouts) > 0:
+		print(
+			'User cannot check out books until',
+			'overdue books have been returned:',
+		)
+		for checkout in overdue_checkouts:
+			book = catalog.get_book_by_copy_id(checkout.copy_id)
+			print(f'{book} (due on {checkout.due_date})')
+
+		if not prompt_for_confirmation('Continue to return overdue books?'):
+			return
+		return_book(user, catalog)
+		overdue_checkouts = catalog.get_overdue_checkouts_for_user(user)
+
+	# Prevent users from checking out a book while they have outstanding fines.
 	while user.fines_due > 0:
 		print(
-			'User still has outstanding fines',
-			'that must be paid first:',
+			'User cannot check out books until',
+			'outstanding fines have been paid:',
 			f'${user.fines_due:.2f}',
 		)
 
 		if not prompt_for_confirmation('Continue to payment?'):
 			return
-		else:
-			pay_fines(user, catalog)
+		pay_fines(user, catalog)
 
 	book = search_for_choice(
 		'Search for book to checkout by title, author, or ISBN',
@@ -146,13 +164,21 @@ def renew_book(user: User, catalog: CatalogData):
 		return
 
 	# Determine whether any of the user's books are eligible for renewal.
+	today = datetime.now(tz=timezone.utc).date()
+	on_time_checkout_ids = {
+		checkout.id
+		for checkout in current_checkouts
+		if checkout.due_date >= today
+	}
+
 	renewable_checkouts = [
 		checkout for checkout in current_checkouts
 		if checkout.renewal_date is None
+		and checkout.id in on_time_checkout_ids
 	]
 
 	if not renewable_checkouts:
-		print('No books cuurently eligible for renewal.')
+		print('No books currently eligible for renewal.')
 		return
 
 	# List the eligible books and prompt the user for a choice.
@@ -192,10 +218,19 @@ def return_book(user: User, catalog: CatalogData):
 		print('No books currently borrowed.')
 		return
 
+	overdue_checkout_ids = {
+		checkout.id for checkout in catalog.get_overdue_checkouts_for_user(user)
+	}
+
 	checkout = prompt_for_choice(
-		'Choose a book to return:',
+		'Choose a book to return ([!] = overdue):',
 		[
-			(checkout, str(catalog.get_book_by_copy_id(checkout.copy_id)))
+			(
+				checkout,
+				f'[!] {catalog.get_book_by_copy_id(checkout.copy_id)}'
+				if checkout.id in overdue_checkout_ids
+				else str(catalog.get_book_by_copy_id(checkout.copy_id)),
+			)
 			for checkout in current_checkouts
 		],
 	)
