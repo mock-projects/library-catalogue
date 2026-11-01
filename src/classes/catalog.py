@@ -175,6 +175,13 @@ class CatalogData:
 			if checkout.user_id == user.id
 		]
 
+	def get_total_fines(self, user: User) -> float:
+		total_fines = sum(
+			checkout.calculate_fine()
+			for checkout in self.get_checkouts_for_user(user)
+		)
+		return total_fines
+
 	####################
 	# MUTATION methods #
 	####################
