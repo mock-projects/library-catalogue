@@ -35,7 +35,9 @@ def print_checkouts(catalog: CatalogData):
 				copy = catalog.get_copy_by_id(checkout.copy_id)
 				book = catalog.get_book_by_isbn(copy.isbn)
 				print(
-					f'{book.title} (borrowed on {checkout.checkout_date}, due on {checkout.due_date})'
+					f'{book.title} (ID#{copy.id})',
+					f'(borrowed on {checkout.checkout_date},',
+					f'due on {checkout.due_date})',
 				)
 			print()
 
@@ -54,15 +56,14 @@ def print_all_users(catalog: CatalogData):
 		print(user)
 
 def print_book_analytics(catalog):
-	'''Get analytics for each book on checkout count and how long people hold onto the book for'''
-	# TODO
-	# This function needs to be audited.
-	# Provide feedback in comments, and determine if there are any bugs.
-
+	'''
+	Get analytics for each book on checkout count,
+	and how long people hold onto the book for.
+	'''
 	checkout_counts = {}
 
 	for book in catalog.books.read_all():
-		checkout_counts[book.title] = len(catalog.get_checkouts_for_book(book))
+		checkout_counts[book.isbn] = len(catalog.get_checkouts_for_book(book))
 
 	print_subheadline('Book Analytics')
 
@@ -70,8 +71,9 @@ def print_book_analytics(catalog):
 	print('Books ordered by number of checkouts')
 	checkout_counts = list(checkout_counts.items())
 	checkout_counts.sort(key=lambda x: x[1], reverse=True)
-	for title, count in checkout_counts:
-		print(f'{count} checkouts: {title}')
+	for isbn, count in checkout_counts:
+		book = catalog.get_book_by_isbn(isbn)
+		print(f'{count} checkouts: {book.title}')
 
 	# Average checkout duration
 	print('\nBooks ordered by average checkout duration')
@@ -93,9 +95,10 @@ def print_book_analytics(catalog):
 
 		if checkout_duration_count > 0:
 			average_checkout_duration = checkout_duration_sum / checkout_duration_count
-			checkout_durations[book.title] = average_checkout_duration
+			checkout_durations[book.isbn] = average_checkout_duration
 
 	checkout_durations = list(checkout_durations.items())
 	checkout_durations.sort(key=lambda x: x[1], reverse=True)
-	for title, duration in checkout_durations:
-		print(f'{duration:.0f} days: {title}')
+	for isbn, duration in checkout_durations:
+		book = catalog.get_book_by_isbn(isbn)
+		print(f'{duration:.0f} days: {book.title}')

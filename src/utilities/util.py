@@ -32,6 +32,14 @@ def prompt_for_confirmation(prompt: str) -> bool:
 	response = input(f'{prompt} (y/n): ').strip().lower()
 	return response == 'y'
 
+def prompt_for_float(prompt: str = 'Enter a number:') -> float:
+	while True:
+		response = input(f'{prompt} ').strip()
+		try:
+			return float(response)
+		except ValueError:
+			print('Invalid number, try again.')
+
 def prompt_for_choice(prompt: str, options: Sequence[tuple[T, str]]) -> T | None:
 	print(prompt)
 	for i, (_, title) in enumerate(options):

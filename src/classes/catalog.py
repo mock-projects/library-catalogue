@@ -199,16 +199,22 @@ class CatalogData:
 		)
 		self.checkouts.write_one(checkout)
 
-	def renew_book(self, checkout: Checkout):
+	def renew_book(self, checkout: Checkout, extension: int = 3):
 		'''
 		Extends the allowable checkout period of a user's book.
+		The `extension` parameter is measured in days.
 		'''
 		if checkout.returned_date is not None:
 			raise ValueError('Checkout has already been returned')
 		elif checkout.renewal_date is not None:
 			raise ValueError('Checkout has already been renewed once')
+		elif extension <= 0:
+			raise ValueError('Renewal period must be greater than zero days')
 
-		checkout.renewal_date = datetime.now(tz=timezone.utc).date()
+		today = datetime.now(tz=timezone.utc).date()
+		due_date = today + timedelta(days=extension)
+		checkout.renewal_date = today
+		checkout.due_date = due_date
 		self.checkouts.update_one(checkout)
 
 	def return_book(self, checkout: Checkout):
@@ -218,22 +224,22 @@ class CatalogData:
 		checkout.returned_date = datetime.now(tz=timezone.utc).date()
 		self.checkouts.update_one(checkout)
 
-	def pay_fines(self, user: User):
-		# TODO
-		# This function needs to be audited.
-		# Provide feedback in comments, and determine if there are any bugs.
+	def add_fine(self, user: User, fine: float):
+		user.fines_due += fine
+		self.users.update_one(user)
 
+	def pay_fines(self, user: User, payment: float):
 		# Mark fines as paid
-		user.fines_due = 0
+		user.fines_due -= payment
 		self.users.update_one(user)
+		self.handle_overpayment(user)
 
-	def set_fine(self, user: User, fine: float):
-		# TODO
-		# This function needs to be audited.
-		# Provide feedback in comments, and determine if there are any bugs.
-
-		user.fines_due = fine
-		self.users.update_one(user)
+	def handle_overpayment(self, user: User):
+		# Return change to user, if they overpaid.
+		if user.fines_due < 0:
+			print(f'Paying out change: ${-user.fines_due}')
+			user.fines_due = 0
+			self.users.update_one(user)
 
 class BookUnavailableError(ValueError):
 	pass
