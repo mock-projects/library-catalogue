@@ -35,7 +35,9 @@ def print_checkouts(catalog: CatalogData):
 				copy = catalog.get_copy_by_id(checkout.copy_id)
 				book = catalog.get_book_by_isbn(copy.isbn)
 				print(
-					f'{book.title} (borrowed on {checkout.checkout_date}, due on {checkout.due_date})'
+					f'{book.title} (ID#{copy.id})',
+					f'(borrowed on {checkout.checkout_date},',
+					f'due on {checkout.due_date})',
 				)
 			print()
 
