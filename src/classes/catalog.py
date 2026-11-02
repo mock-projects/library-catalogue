@@ -36,6 +36,7 @@ USERS_FIELDNAMES = [
 	'last_name',
 	'email',
 	'fines_due',
+	'fines_paid',
 ]
 
 CHECKOUTS_FIELDNAMES = [
@@ -175,6 +176,22 @@ class CatalogData:
 			if checkout.user_id == user.id
 		]
 
+	def get_overdue_checkouts_for_user(self, user: User) -> list[Checkout]:
+		today = datetime.now(tz=timezone.utc).date()
+		return [
+			checkout
+			for checkout in self.get_checkouts_for_user(user)
+			if checkout.returned_date is None
+			and checkout.due_date < today
+		]
+
+	def get_total_fines(self, user: User) -> float:
+		total_fines = sum(
+			checkout.calculate_fine()
+			for checkout in self.get_checkouts_for_user(user)
+		)
+		return total_fines
+
 	####################
 	# MUTATION methods #
 	####################
@@ -231,6 +248,7 @@ class CatalogData:
 	def pay_fines(self, user: User, payment: float):
 		# Mark fines as paid
 		user.fines_due -= payment
+		user.fines_paid += payment
 		self.users.update_one(user)
 		self.handle_overpayment(user)
 

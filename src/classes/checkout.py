@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 
 from utilities.util import string_to_date
 
@@ -59,6 +59,12 @@ class Checkout:
 				string_to_date(row['returned_date']) if row['returned_date'] else None
 			),
 		)
+
+	def calculate_fine(self) -> float:
+		today = datetime.now(tz=timezone.utc).date()
+		fine_end_date = self.returned_date or today
+		days_overdue = (fine_end_date - self.due_date).days
+		return min(max(days_overdue, 0) * 20, 500) / 100
 
 	def __str__(self):
 		return_string = (
