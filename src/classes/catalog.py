@@ -224,22 +224,22 @@ class CatalogData:
 		checkout.returned_date = datetime.now(tz=timezone.utc).date()
 		self.checkouts.update_one(checkout)
 
-	def pay_fines(self, user: User):
-		# TODO
-		# This function needs to be audited.
-		# Provide feedback in comments, and determine if there are any bugs.
+	def add_fine(self, user: User, fine: float):
+		user.fines_due += fine
+		self.users.update_one(user)
 
+	def pay_fines(self, user: User, payment: float):
 		# Mark fines as paid
-		user.fines_due = 0
+		user.fines_due -= payment
 		self.users.update_one(user)
+		self.handle_overpayment(user)
 
-	def set_fine(self, user: User, fine: float):
-		# TODO
-		# This function needs to be audited.
-		# Provide feedback in comments, and determine if there are any bugs.
-
-		user.fines_due = fine
-		self.users.update_one(user)
+	def handle_overpayment(self, user: User):
+		# Return change to user, if they overpaid.
+		if user.fines_due < 0:
+			print(f'Paying out change: ${-user.fines_due}')
+			user.fines_due = 0
+			self.users.update_one(user)
 
 class BookUnavailableError(ValueError):
 	pass
