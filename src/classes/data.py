@@ -54,14 +54,14 @@ class Data(Generic[T]):
 
 	def write_all(self, objects: list[T]):
 		'''Write a list of objects to the data file.'''
-		with open(self.filename, 'w') as file:
+		with open(self.filename, 'w', newline='') as file:
 			writer = csv.DictWriter(file, fieldnames=self.properties)
 			writer.writeheader()
 			writer.writerows([self.serialize(obj) for obj in objects])
 
 	def write_one(self, object: T):
 		'''Write a single object to end of the data file.'''
-		with open(self.filename, 'a') as file:
+		with open(self.filename, 'a', newline='') as file:
 			writer = csv.DictWriter(file, fieldnames=self.properties)
 			writer.writerow(self.serialize(object))
 
