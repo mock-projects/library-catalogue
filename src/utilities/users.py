@@ -91,6 +91,18 @@ def print_checkout_history(user: User, catalog: CatalogData):
 		)
 
 def checkout_book(user: User, catalog: CatalogData):
+	while user.fines_due > 0:
+		print(
+			'User still has outstanding fines',
+			'that must be paid first:',
+			f'${user.fines_due:.2f}',
+		)
+
+		if not prompt_for_confirmation('Continue to payment?'):
+			return
+		else:
+			pay_fines(user, catalog)
+
 	book = search_for_choice(
 		'Search for book to checkout by title, author, or ISBN',
 		catalog.books.read_all(),
@@ -99,24 +111,12 @@ def checkout_book(user: User, catalog: CatalogData):
 
 	if book is None:
 		raise ValueError('Book not found.')
+	if not catalog.is_book_available(book):
+		raise ValueError('Book is not available for checkout.')
 
 	print(f'Book selected: {book}')
-
 	if not prompt_for_confirmation('Confirm checkout?'):
 		return
-
-	# TODO
-	# This conditional block needs to be audited.
-	# Provide feedback in comments, and determine if there are any bugs.
-	if user.fines_due > 0:
-		print(
-			'User has outstanding fines',
-			'that must be paid first:',
-			f'${user.fines_due:.2f}',
-		)
-		if not prompt_for_confirmation('Pay fines?'):
-			return
-		pay_fines(user, catalog)
 
 	try:
 		catalog.checkout_book(user, book)
@@ -214,20 +214,29 @@ def return_book(user: User, catalog: CatalogData):
 	# TODO
 	# This conditional block needs to be audited.
 	# Provide feedback in comments, and determine if there are any bugs.
+	#
+	# BUG
+	# In particular, the system does not account for late fees
+	# on books that have not been turned in yet.
+	# Perhaps a system is needed to charge late fees for books not returned yet.
+	# Alternatively, a system that demands overdue books be returned could work instead.
 
 	# Charge a $0.20 fine per day late, up to a maximum of $5.00
 	if checkout.due_date < checkout.returned_date:
-		date_difference = checkout.returned_date - checkout.due_date
-		days_overdue = date_difference.total_seconds() / (60 * 60 * 24)
+		# Count days overdue.
+		date_delta = checkout.returned_date - checkout.due_date
+		days_overdue = date_delta.days
+		# Calculate the fine.
 		fine = days_overdue * 0.20
 		fine = min(fine, 5.00)
+		# Apply the fine and return the book.
 		catalog.add_fine(user, fine)
 		print(
 			'Book returned successfully.',
 			f'Fine of ${fine:.2f} applied.',
 		)
-
-	print('Book returned successfully.')
+	else:
+		print('Book returned successfully.')
 
 def pay_fines(user: User, catalog: CatalogData):
 	if user.fines_due == 0:
